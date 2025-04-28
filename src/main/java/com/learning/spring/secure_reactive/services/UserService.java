@@ -32,7 +32,7 @@ public class UserService {
                 .mapNotNull(this::convertToModel);
     }
 
-    public Flux<User> getAllUser(Pageable pageable){
+    public Flux<User> getAllUser(Pageable pageable) {
         return userRepository
                 .findAllBy(pageable)
                 .mapNotNull(this::convertToModel);
