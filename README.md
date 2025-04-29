@@ -16,3 +16,11 @@ Open this command
 http://localhost:8082
 ```
 Using username and password from application.properties file
+
+### onError operators
+- **onErrorReturn()** - Replaces an error with a single, predefined value.
+- **onErrorResume()** - Replaces an error with an alternative publisher.
+- **onErrorComplete()** - Transforms an error into a completion signal.
+- **onErrorContinue()** - Recovers from errors by dropping the erroneous element and continuing the sequence.
+- **onErrorMap()** - Transforms the error into a different error.
+- **onErrorStop()** - Tells the stream to stop processing immediately.
