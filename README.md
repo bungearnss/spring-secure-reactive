@@ -24,3 +24,15 @@ Using username and password from application.properties file
 - **onErrorContinue()** - Recovers from errors by dropping the erroneous element and continuing the sequence.
 - **onErrorMap()** - Transforms the error into a different error.
 - **onErrorStop()** - Tells the stream to stop processing immediately.
+
+### Key Features of WebClient in Spring WebFlux
+- Non-Blocking Asynchronous Communication
+- Support HTTP/2
+- Reactive Streaming with Flux and Mono
+- Automatic Service Discovery with Spring Cloud
+- Built-in Support for Custom Headers and Parameters
+- Error Handling with onErrorResume and onStatus
+- Load Balancing with Spring Cloud
+- Customizable Request and Response Filters
+- Built-in JSON and XML Support
+- Timeout and Retry Mechanisms
