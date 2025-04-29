@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +39,8 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+//    @PreAuthorize("authentication.principal.equals(#userId.toString()) or hasRole('ROLE_ADMIN')")
+    @PostAuthorize("returnObject.body!=null and (returnObject.body.id.toString().equals(authentication.principal))")
     public Mono<ResponseEntity<User>> getUserById(@PathVariable("userId") UUID userId) {
         return userService.getUserById(userId)
                 .map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
@@ -49,5 +55,12 @@ public class UserController {
         if (page > 0) page = page - 1;
         Pageable pageable = PageRequest.of(page, limit);
         return userService.getAllUser(pageable);
+    }
+
+    /* demo for api endpoint for server-sent event */
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> streamUser(){
+        return Flux.interval(Duration.ofSeconds(1))
+                .map(sequence -> "Event " + sequence);
     }
 }
