@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.UUID;
@@ -26,11 +27,18 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final Sinks.Many<User> usersSink;
+
+    public UserService(Sinks.Many<User> usersSink) {
+        this.usersSink = usersSink;
+    }
+
     public Mono<User> createUser(Mono<CreateUserRequest> createUserRequestMono) {
         return createUserRequestMono
                 .flatMap(this::convertToEntity)
                 .flatMap(user -> userRepository.save(user))
-                .mapNotNull(this::convertToModel);
+                .mapNotNull(this::convertToModel)
+                .doOnSuccess(usersSink::tryEmitNext);
     }
 
     public Mono<User> getUserById(UUID id) {
@@ -43,6 +51,12 @@ public class UserService {
         return userRepository
                 .findAllBy(pageable)
                 .mapNotNull(this::convertToModel);
+    }
+
+    public Flux<User> streamUser(){
+        return usersSink.asFlux()
+                .publish()
+                .autoConnect(1);
     }
 
     private Mono<UserEntity> convertToEntity(CreateUserRequest createUserRequest) {
