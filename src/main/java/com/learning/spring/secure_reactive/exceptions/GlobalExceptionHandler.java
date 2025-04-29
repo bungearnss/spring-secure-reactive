@@ -3,6 +3,7 @@ package com.learning.spring.secure_reactive.exceptions;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,5 +31,10 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         return Mono.just(ErrorResponse.builder(exception, HttpStatus.BAD_REQUEST, errorMessage).build());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public Mono<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
+        return Mono.just(ErrorResponse.builder(exception, HttpStatus.UNAUTHORIZED, exception.getMessage()).build());
     }
 }

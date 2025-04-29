@@ -6,22 +6,16 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserRequest {
-
-    @NotBlank(message = "First name cannot be empty")
-    @Size(min = 2, max = 50, message = "First name cannot be shorter than 2 and longer than 50 characters")
-    private String firstName;
-
-    @NotBlank(message = "Last name cannot be empty")
-    @Size(min = 2, max = 50, message = "Last name cannot be shorter than 2 and longer than 50 characters")
-    private String lastName;
+@Accessors(chain = true)
+public class AuthRequest {
 
     @NotBlank(message = "Email cannot be empty")
-    @Email(message = "Please enter a valid email address")
+    @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
