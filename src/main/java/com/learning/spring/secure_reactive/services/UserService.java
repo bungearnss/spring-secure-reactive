@@ -24,18 +24,18 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final WebClient webClient;
     private final Sinks.Many<User> usersSink;
 
-    @Autowired
-    private WebClient webClient;
-
-    public UserService(Sinks.Many<User> usersSink) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       WebClient webClient,
+                       Sinks.Many<User> usersSink) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.webClient = webClient;
         this.usersSink = usersSink;
     }
 
