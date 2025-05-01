@@ -28,9 +28,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ResponseEntity<User>> createUser(@RequestBody @Valid Mono<CreateUserRequest> createUserRequest) {
-        return userService.createUser(createUserRequest)
+    public Mono<ResponseEntity<User>> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        return userService.createUser(Mono.just(createUserRequest))
                 .map(user -> ResponseEntity
                         .status(HttpStatus.CREATED)
                         .location(URI.create("/users/" + user.getId()))
@@ -61,7 +60,7 @@ public class UserController {
 
     /* demo for api endpoint for server-sent event */
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<User> streamUser(){
+    public Flux<User> streamUser() {
         return userService.streamUser();
     }
 }
